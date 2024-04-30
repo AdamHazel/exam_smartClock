@@ -4,11 +4,23 @@
 #include "classes.h"
 #include "mbed.h"
 
-typedef struct alarmScreen_struct {
-  screen *alarmS_pointer;
-  int* screenN;
-  bool *alarmA_boolPointer;
+typedef struct defaultScreen_struct {
+  screen *defaultS;
+  bool *alarmEn;
+  bool *alarmAct;
+  bool *alarmSn;
+  bool *alarmMut;
+  char *alarmBuf;
+} defaultScreen_struct;
 
+typedef struct alarmScreen_struct {
+  screen *alarmS;
+  int *screenN;
+  bool *alarmEn;
+  bool *alarmAct;
+  bool *alarmSn;
+  bool *alarmMut;
+  char *alarmBuf;
 } alarmScreen_struct;
 
 #endif // STRUCTS_H

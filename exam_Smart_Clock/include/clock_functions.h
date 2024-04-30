@@ -10,7 +10,7 @@
 
 void startUp(DFRobot_RGBLCD1602 &lcd);
 void tempHum(screen* scr);
-void alarmFunc(std::pair<screen*, bool*> *info);
-void defaultScreen(std::pair<screen*, bool*> *info);
+void alarmFunc(alarmScreen_struct* info);
+void defaultScreen(defaultScreen_struct* info);
 
 #endif // CLOCK_FUNCTIONS_H

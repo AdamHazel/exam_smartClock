@@ -2,8 +2,10 @@
 #include "classes.h"
 #include <cstdio>
 
+#include "structs.h"
+
 #define BUFFER_SIZE 17
-void defaultScreen(std::pair<screen*, bool*> *info)
+void defaultScreen(defaultScreen_struct* info)
 {
     while(true)
     {
@@ -12,14 +14,12 @@ void defaultScreen(std::pair<screen*, bool*> *info)
         static char buffer[BUFFER_SIZE];
         static char buffer2[BUFFER_SIZE];
         strftime(buffer, BUFFER_SIZE, "%a %d %b %H:%M", localtime(&seconds));
-        if(*(info->second) == false)
-            snprintf(buffer2, BUFFER_SIZE, "Alarm off");
-        if(*(info->second) == true)
-            snprintf(buffer2, BUFFER_SIZE, "Alarm on");
 
-        info->first->messMut.lock();
-        info->first->setLine_one(buffer);
-        info->first->setLine_two(buffer2);
-        info->first->messMut.unlock();
+        snprintf(buffer2, BUFFER_SIZE, "Alarm info here");
+
+        info->defaultS->messMut.lock();
+        info->defaultS->setLine_one(buffer);
+        info->defaultS->setLine_two(buffer2);
+        info->defaultS->messMut.unlock();
     }
 }

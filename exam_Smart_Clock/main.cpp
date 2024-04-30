@@ -19,10 +19,23 @@ const int screenAmount = 6;
 int buttonClick = 0;
 int screenNumber = 0;
 bool screenChanged = false;
+
+// Alarm states and buffer
 bool alarmActive = false;
+bool alarmEnabled = false;
+bool alarmSnoozed = false;
+bool alarmMuted = false;
+char alarmBuffer[17];
 
 // Buttons
 InterruptIn BlueButton(BUTTON1, PullNone);
+
+// Interrupt functions
+void screenChange() {
+    ++buttonClick;
+    screenNumber = buttonClick % screenAmount; 
+    screenChanged = true;
+}
 
 // I2C class for screen
 I2C lcdI2C(PB_9, PB_8);
@@ -34,12 +47,7 @@ BufferedSerial serial_port(USBTX, USBRX);
 // Mutexs
 Mutex networkMutex;
 
-// Interrupt functions
-void screenChange() {
-    ++buttonClick;
-    screenNumber = buttonClick % screenAmount; 
-    screenChanged = true;
-}
+
 
 
 
@@ -60,24 +68,24 @@ int main() {
     screen *coorScreen = new screen;
     screen *newsScreen = new screen;
 
-    // Pairs for sending into threads
-    std::pair<screen*, bool*> *defPair = new std::pair<screen*, bool*>;
-    defPair->first = defScreen;
-    defPair->second = &alarmActive;
+    // Initialise struct for default screen thread
+    defaultScreen_struct* defThreadInfo = new defaultScreen_struct;
+    defThreadInfo->defaultS = defScreen;
+    defThreadInfo->alarmAct = &alarmActive;
+    defThreadInfo->alarmEn = &alarmEnabled;
+    defThreadInfo->alarmMut = &alarmMuted;
+    defThreadInfo->alarmSn = &alarmSnoozed;
+    defThreadInfo->alarmBuf = alarmBuffer;
 
-
-    // USE A STRUCT FOR THIS INSTEAD AS WE NEED SCREEN NUMBER
-    std::pair<screen*, bool*> *alarmPair = new std::pair<screen*, bool*>;
-    alarmPair->first = alarmScreen;
-    alarmPair->second = &alarmActive;
-
-    
-    
-    // Struct for sending in all necessary information into alarm thread
-    alarmScreen_struct* alarm_T_info = new alarmScreen_struct;
-    alarm_T_info->alarmS_pointer = alarmScreen;
-    alarm_T_info->screenN = &screenNumber;
-    alarm_T_info->alarmA_boolPointer = &alarmActive;
+    // Initialise strunct for alarm screeen thread
+    alarmScreen_struct* alarmThreadInfo = new alarmScreen_struct;
+    alarmThreadInfo->alarmS = alarmScreen;
+    alarmThreadInfo->screenN = &screenNumber;
+    alarmThreadInfo->alarmAct = &alarmActive;
+    alarmThreadInfo->alarmEn = &alarmEnabled;
+    alarmThreadInfo->alarmMut = &alarmMuted;
+    alarmThreadInfo->alarmSn = &alarmSnoozed;
+    alarmThreadInfo->alarmBuf = alarmBuffer;
     
 
     printf("We got passed assigning to struct\n");
@@ -95,8 +103,8 @@ int main() {
 
     // Start thread
     tempInfo.start(callback(tempHum, tempScreen));
-    defaultInfo.start(callback(defaultScreen, defPair));
-    alarmSet.start(callback(alarmFunc,alarmPair));
+    defaultInfo.start(callback(defaultScreen, defThreadInfo));
+    alarmSet.start(callback(alarmFunc,alarmThreadInfo));
 
     printf("Threads started\n");
     
@@ -113,7 +121,7 @@ int main() {
             lcd.printf(defScreen->getLine_Two());
             defScreen->messMut.unlock();
             break;
-        case 1:
+        case 1: // Alarm screen
             screenCheck(screenChanged, lcd, screenNumber);
             lcd.setCursor(0, 0);
             alarmScreen->messMut.lock();
