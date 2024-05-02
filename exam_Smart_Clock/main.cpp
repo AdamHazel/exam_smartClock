@@ -120,6 +120,7 @@ int main() {
             lcd.setCursor(0, 1);
             lcd.printf(defScreen->getLine_Two());
             defScreen->messMut.unlock();
+            printf("Default screen : 0\n");
             break;
         case 1: // Alarm screen
             screenCheck(screenChanged, lcd, screenNumber);
