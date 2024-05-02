@@ -9,7 +9,7 @@
 
 void alarmFunc(alarmScreen_struct* info)
 {
-    DigitalIn timePick(PA_0,PullNone);
+    DigitalIn timePick(PA_0,PullDown);
     AnalogIn alarmIn(PA_1);
 
     static char buffer[BUFFER_SIZE];
