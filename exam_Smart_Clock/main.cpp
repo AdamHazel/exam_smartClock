@@ -27,14 +27,38 @@ bool alarmSnoozed = false;
 bool alarmMuted = false;
 char alarmBuffer[17];
 
-// Buttons
+// Buttons (Port 0 and 1 is used in alarmFunction)
 InterruptIn BlueButton(BUTTON1, PullNone);
+InterruptIn enableAlarm(PA_3, PullUp);
+InterruptIn snoozeAlarm(PB_4, PullUp);
+InterruptIn muteAlarm(PA_15, PullUp);
 
 // Interrupt functions
 void screenChange() {
     ++buttonClick;
     screenNumber = buttonClick % screenAmount; 
     screenChanged = true;
+}
+
+void enableAlarm_func() {
+    if (alarmEnabled == false) {
+        alarmEnabled = true;
+    } else if (alarmEnabled == true) {
+        alarmEnabled = false;
+        alarmActive = false;
+        alarmSnoozed = false;
+        alarmMuted = false;
+    }
+}
+
+void snoozeAlarm_func() {
+    if (alarmEnabled == true && alarmActive == true && alarmSnoozed == false)
+        alarmSnoozed = true;
+}
+
+void muteAlarm_func() {
+    if (alarmEnabled == true && alarmMuted == false)
+        alarmMuted = true;
 }
 
 // I2C class for screen
@@ -46,10 +70,6 @@ BufferedSerial serial_port(USBTX, USBRX);
 
 // Mutexs
 Mutex networkMutex;
-
-
-
-
 
 
 int main() {
@@ -90,9 +110,11 @@ int main() {
 
     printf("We got passed assigning to struct\n");
 
-
     // Interrupt for changing screen
     BlueButton.rise(&screenChange);
+    enableAlarm.fall(&enableAlarm_func);
+    snoozeAlarm.fall(&snoozeAlarm_func);
+    muteAlarm.fall(&muteAlarm_func);
 
     // Threads
     Thread tempInfo(osPriorityNormal, OS_STACK_SIZE, nullptr, "tempScreen");
@@ -130,6 +152,10 @@ int main() {
             lcd.setCursor(0, 1);
             lcd.printf(alarmScreen->getLine_Two());
             alarmScreen->messMut.unlock();
+            if (alarmEnabled == true)
+                printf("Alarm is enabled\n");
+            else 
+                printf("Alarm is not enabled\n");
             break;
         case 2: // Temperature and screen
             screenCheck(screenChanged, lcd, screenNumber);

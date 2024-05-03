@@ -9,7 +9,7 @@
 
 void alarmFunc(alarmScreen_struct* info)
 {
-    DigitalIn timePick(PA_0,PullDown);
+    DigitalIn timePick(PA_0, PullDown);
     AnalogIn alarmIn(PA_1);
 
     static char buffer[BUFFER_SIZE];
@@ -50,12 +50,41 @@ void alarmFunc(alarmScreen_struct* info)
         {
             snprintf(buffer2, BUFFER_SIZE, "%02d:%02d", hour, min);
             snprintf(info->alarmBuf, BUFFER_SIZE, "%s", buffer2);
-            //info->alarmBuf[strlen(buffer2)] = '\0';
 
             // Set alarm
         }
 
-        
+        // State 3 : Alarm active
+        if (*(info->alarmAct) == true && *(info->alarmEn) == true &&
+            *(info->alarmSn) == false && *(info->alarmMut) == false)
+        {
+            // Alarm sounds
+
+            // Set alarm
+        }
+
+        // State 4 : Alarm snoozed
+        if (*(info->alarmAct) == false && *(info->alarmEn) == true &&
+            *(info->alarmSn) == true && *(info->alarmMut) == false)
+        {
+            // Snoozed functionality
+        }
+
+        // State 5 : Alarm active and muted
+        if (*(info->alarmAct) == true && *(info->alarmEn) == true &&
+            *(info->alarmSn) == false && *(info->alarmMut) == true)
+        {
+            // Muted functionality
+        }
+
+        // State 6 : Alarm snoozed and muted
+        if (*(info->alarmAct) == false && *(info->alarmEn) == true &&
+            *(info->alarmSn) == true && *(info->alarmMut) == true)
+        {
+            // Muted functionality
+        }
+
+        // Place to display buffer (object)
         info->alarmS->messMut.lock();
         info->alarmS->setLine_one(buffer);
         info->alarmS->setLine_two(buffer2);

@@ -15,12 +15,23 @@ void defaultScreen(defaultScreen_struct* info)
         static char buffer2[BUFFER_SIZE];
         strftime(buffer, BUFFER_SIZE, "%a %d %b %H:%M", localtime(&seconds));
 
-        // When alarm is enabled
+        // State 2: When alarm is enabled
         if (*(info->alarmAct) == false && *(info->alarmEn) == true &&
             *(info->alarmSn) == false && *(info->alarmMut) == false)
         {
             snprintf(buffer2, BUFFER_SIZE, "Alarm  %s", info->alarmBuf);
         }
+
+        // State 3: When alarm is active
+        if (*(info->alarmAct) == true && *(info->alarmEn) == true &&
+            *(info->alarmSn) == false && *(info->alarmMut) == false)
+        {
+            snprintf(buffer2, BUFFER_SIZE, "Alarm (A) %s", info->alarmBuf);
+        }
+
+        //State 5 : 
+
+        
 
         info->defaultS->messMut.lock();
         info->defaultS->setLine_one(buffer);
