@@ -152,10 +152,6 @@ int main() {
             lcd.setCursor(0, 1);
             lcd.printf(alarmScreen->getLine_Two());
             alarmScreen->messMut.unlock();
-            if (alarmEnabled == true)
-                printf("Alarm is enabled\n");
-            else 
-                printf("Alarm is not enabled\n");
             break;
         case 2: // Temperature and screen
             screenCheck(screenChanged, lcd, screenNumber);
