@@ -22,10 +22,15 @@ void alarmFunc(alarmScreen_struct* info)
 
     static constexpr int hourInterval = 24;
     static constexpr int minInterval = 60;
+
+    static constexpr int alarmDurS = 60;
+    static constexpr int snoozeDurS = 60;
+
     static int hour = 0;
     static int min = 0;
-    static Timer t;
-    static int minuteCounter = 0;
+    static Timer alarmT;
+    static Timer snoozeT;
+    static int secondCounter = 0;
     
     snprintf(buffer, BUFFER_SIZE, "Alarm:");
 
@@ -74,16 +79,20 @@ void alarmFunc(alarmScreen_struct* info)
             *(info->alarmSn) == false && *(info->alarmMut) == false)
         {
             // Alarm sounds
-            t.start();
-            while(minuteCounter <= 60)
-            {
-                minuteCounter = (int) duration_cast<seconds>(t.elapsed_time()).count();
-                printf("Alarm is now active. Time gone is %i\n", minuteCounter);
-                buzzer.write(0.5);
-            }
-            *(info->alarmAct) = false;
+            alarmT.start();
+            buzzer.write(0.2);
+            secondCounter = (int) duration_cast<seconds>(alarmT.elapsed_time()).count();
+            printf("Alarm is now active. Time gone is %i\n", secondCounter);
             
-            // Set alarm
+            // Alarm mutes when it runs out
+            if (secondCounter == alarmDurS)
+            {
+                buzzer.write(0.0);
+                alarmT.stop();
+                alarmT.reset();
+                *(info->alarmAct) = false; 
+            }
+            
 
         }
 
@@ -91,22 +100,39 @@ void alarmFunc(alarmScreen_struct* info)
         if (*(info->alarmAct) == false && *(info->alarmEn) == true &&
             *(info->alarmSn) == true && *(info->alarmMut) == false)
         {
-            // Snoozed functionality
+            buzzer.write(0.0);
+            alarmT.stop();
+            alarmT.reset();
+            
+            snoozeT.start();
+            secondCounter = (int) duration_cast<seconds>(snoozeT.elapsed_time()).count();
+            printf("Alarm is now snoozed. Time gone is %i\n", secondCounter);
+
+            // Snooze timer
+            if (secondCounter == snoozeDurS) 
+            {
+                snoozeT.stop();
+                snoozeT.reset();
+                *(info->alarmAct) = true;
+                *(info->alarmSn) = false;
+            }
         }
 
-        // State 5 : Alarm active and muted
-        if (*(info->alarmAct) == true && *(info->alarmEn) == true &&
-            *(info->alarmSn) == false && *(info->alarmMut) == true)
+        // State 5 : Alarm mute
+        if (*(info->alarmEn) == true && *(info->alarmMut) == true)
         {
-            // Muted functionality
+            buzzer.write(0.0);
+            alarmT.stop();
+            alarmT.reset();
+
+            snoozeT.stop();
+            alarmT.reset();
+            *(info->alarmSn) = false;
+            *(info->alarmAct) = false;
+            *(info->alarmMut) = false;
         }
 
-        // State 6 : Alarm snoozed and muted
-        if (*(info->alarmAct) == false && *(info->alarmEn) == true &&
-            *(info->alarmSn) == true && *(info->alarmMut) == true)
-        {
-            // Muted functionality
-        }
+       
 
         // Place to display buffer (object)
         info->alarmS->messMut.lock();

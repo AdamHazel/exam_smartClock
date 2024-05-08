@@ -52,12 +52,14 @@ void enableAlarm_func() {
 }
 
 void snoozeAlarm_func() {
-    if (alarmEnabled == true && alarmActive == true && alarmSnoozed == false)
+    if (alarmEnabled == true && alarmActive == true && alarmSnoozed == false) {
         alarmSnoozed = true;
+        alarmActive = false;
+    }
 }
 
 void muteAlarm_func() {
-    if (alarmEnabled == true && alarmMuted == false)
+    if ((alarmActive == true || alarmSnoozed == true) && alarmMuted == false)
         alarmMuted = true;
 }
 
@@ -142,7 +144,6 @@ int main() {
             lcd.setCursor(0, 1);
             lcd.printf(defScreen->getLine_Two());
             defScreen->messMut.unlock();
-            printf("Default screen : 0\n");
             break;
         case 1: // Alarm screen
             screenCheck(screenChanged, lcd, screenNumber);

@@ -73,12 +73,7 @@ void startUp(DFRobot_RGBLCD1602 &lcd) {
     // This TLS socket is allocated on stack and takes approx 1500 bytes of
     // stack memory. So make sure you have enough stack size
     TLSSocket socket;
-    // Alternatively you might allocate from heap:
-    // TLSSocket *socket = new TLSSocket;
-    // but then you MUST remember to free up memory when then local variable
-    // holding the pointer to the allocated socket object goes out of scope:
-    // delete socket;
-    // Otherwise you have created a memory leak
+    
 
     // Configure timeout on socket receive
     // (returns NSAPI_ERROR_WOULD_BLOCK on timeout)
@@ -109,8 +104,6 @@ void startUp(DFRobot_RGBLCD1602 &lcd) {
     address.set_port(443);
 
     // Set the root certificate of the web site.
-    // See include/ipify_org_ca_root_certificate.h for how to
-    // download the certificate and add it to source code
     result = socket.set_root_ca_cert(ipgeolocationcert);
 
     if (result != NSAPI_ERROR_OK) {
@@ -119,10 +112,6 @@ void startUp(DFRobot_RGBLCD1602 &lcd) {
       continue;
     }
 
-    // ### IMPORTANT ###
-    // Often a server has several virtual hosts to serve, and
-    // it is therefore necessary to tell which host to connect to,
-    // in order to let the TLS handshake succeed
     socket.set_hostname(host);
 
     // Connect to server at the given address
@@ -144,8 +133,7 @@ void startUp(DFRobot_RGBLCD1602 &lcd) {
         "Connection: close\r\n"
         "\r\n";
 
-    // The request might not be fully sent in one go,
-    // so keep track of how much we have sent
+    // Keeping track of how much of the request we have sent
     nsapi_size_t bytes_to_send = strlen(http_request);
     nsapi_size_or_error_t sent_bytes = 0;
 
@@ -175,10 +163,7 @@ void startUp(DFRobot_RGBLCD1602 &lcd) {
 
     printf("Complete message sent\n");
 
-    // The respone needs to be stored in memory. The memory object is called a
-    // buffer. If you make this buffer static it will be placed in bss (memory
-    // for global and static variables) and won't use the main thread stack
-    // memory
+    
     static char http_response[HTTP_RESPONSE_BUFFER_SIZE];
 
     // Nullify response buffer
