@@ -36,6 +36,19 @@ void alarmFunc(alarmScreen_struct* info)
 
     while (true)
     {
+        //State 0: If the user disables alarm when ringing or snoozed
+        if (*(info->alarmAct) == false && *(info->alarmEn) == false &&
+            *(info->alarmSn) == false && *(info->alarmMut) == false)
+        {
+            alarmT.stop();
+            alarmT.reset();
+
+            snoozeT.stop();
+            snoozeT.reset();
+
+            buzzer.write(0.0);
+        }
+        
         // State 1 : To set alarm clock
         if (*(info->screenN) == 1 && *(info->alarmAct) == false && *(info->alarmEn) == false &&
             *(info->alarmSn) == false && *(info->alarmMut) == false)
@@ -126,7 +139,8 @@ void alarmFunc(alarmScreen_struct* info)
             alarmT.reset();
 
             snoozeT.stop();
-            alarmT.reset();
+            snoozeT.reset();
+
             *(info->alarmSn) = false;
             *(info->alarmAct) = false;
             *(info->alarmMut) = false;
