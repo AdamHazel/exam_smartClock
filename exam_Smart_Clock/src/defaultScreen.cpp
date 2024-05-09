@@ -27,23 +27,23 @@ void defaultScreen(defaultScreen_struct* info)
         
         // State 2: When alarm is enabled
         if (*(info->alarmAct) == false && *(info->alarmEn) == true &&
-            *(info->alarmSn) == false && *(info->alarmMut) == false)
+            *(info->alarmSn) == false)
         {
-            snprintf(buffer2, BUFFER_SIZE, "Alarm  %s%s", info->alarmBuf,spacing);
+            snprintf(buffer2, BUFFER_SIZE, "Alarm      %s%s", info->alarmBuf,spacing);
         }
 
         // State 3: When alarm is active
         if (*(info->alarmAct) == true && *(info->alarmEn) == true &&
             *(info->alarmSn) == false && *(info->alarmMut) == false)
         {
-            snprintf(buffer2, BUFFER_SIZE, "Alarm (A) %s%s", info->alarmBuf,spacing);
+            snprintf(buffer2, BUFFER_SIZE, "Alarm (A)  %s%s", info->alarmBuf,spacing);
         }
 
         // State 4 : Alarm snoozed
         if (*(info->alarmAct) == false && *(info->alarmEn) == true &&
             *(info->alarmSn) == true && *(info->alarmMut) == false)
         {
-            snprintf(buffer2, BUFFER_SIZE, "Alarm (S) %s%s", info->alarmBuf,spacing);
+            snprintf(buffer2, BUFFER_SIZE, "Alarm (S)  %s%s", info->alarmBuf,spacing);
         }
 
         

@@ -21,6 +21,7 @@ int screenNumber = 0;
 bool screenChanged = false;
 
 // Alarm states and buffer
+bool alarmChange = false;
 bool alarmActive = false;
 bool alarmEnabled = false;
 bool alarmSnoozed = false;
@@ -32,6 +33,7 @@ InterruptIn BlueButton(BUTTON1, PullNone);
 InterruptIn enableAlarm(PA_3, PullUp);
 InterruptIn snoozeAlarm(PB_4, PullUp);
 InterruptIn muteAlarm(PA_15, PullUp);
+InterruptIn setAlarm(PB_2, PullUp);
 
 // Interrupt functions
 void screenChange() {
@@ -43,14 +45,15 @@ void screenChange() {
 void enableAlarm_func() {
     if (alarmEnabled == false) {
         alarmEnabled = true;
-    } else if (alarmEnabled == true) {
+    } else if (alarmEnabled == true && alarmActive == false && alarmSnoozed == false) {
         alarmEnabled = false;
+        alarmMuted = false;
         alarmActive = false;
         alarmSnoozed = false;
-        alarmMuted = false;
     }
 }
 
+// Cannot snooze unless alarm is active
 void snoozeAlarm_func() {
     if (alarmEnabled == true && alarmActive == true && alarmSnoozed == false) {
         alarmSnoozed = true;
@@ -58,9 +61,18 @@ void snoozeAlarm_func() {
     }
 }
 
+// Cannot mute unless alarm is active or snoozed
 void muteAlarm_func() {
     if ((alarmActive == true || alarmSnoozed == true) && alarmMuted == false)
         alarmMuted = true;
+}
+
+// To increase alarm values
+void setAlarm_func() {
+    if (screenNumber == 1 && alarmChange == false)
+    {
+        alarmChange = true;
+    }
 }
 
 // I2C class for screen
@@ -107,6 +119,7 @@ int main() {
     alarmThreadInfo->alarmEn = &alarmEnabled;
     alarmThreadInfo->alarmMut = &alarmMuted;
     alarmThreadInfo->alarmSn = &alarmSnoozed;
+    alarmThreadInfo->alarmChng = &alarmChange;
     alarmThreadInfo->alarmBuf = alarmBuffer;
     
 
@@ -117,6 +130,7 @@ int main() {
     enableAlarm.fall(&enableAlarm_func);
     snoozeAlarm.fall(&snoozeAlarm_func);
     muteAlarm.fall(&muteAlarm_func);
+    setAlarm.fall(&setAlarm_func);
 
     // Threads
     Thread tempInfo(osPriorityNormal, OS_STACK_SIZE, nullptr, "tempScreen");
