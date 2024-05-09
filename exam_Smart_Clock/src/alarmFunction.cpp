@@ -8,6 +8,8 @@
 #include "structs.h"
 
 #define BUFFER_SIZE 17
+
+
 using namespace std::chrono;
 
 void alarmFunc(alarmScreen_struct* info)
@@ -19,11 +21,11 @@ void alarmFunc(alarmScreen_struct* info)
     static char buffer[BUFFER_SIZE];
     static char buffer2[BUFFER_SIZE];
 
-    static constexpr int hourInterval = 24;
-    static constexpr int minInterval = 60;
+    static constexpr int hourInterval { 24 };
+    static constexpr int minInterval { 60 };
 
-    static constexpr int alarmDurS = 30;
-    static constexpr int snoozeDurS = 30;
+    static constexpr int alarmDurS { 60 * 10 };
+    static constexpr int snoozeDurS { 60 * 5 };
 
     static int hourCounter { 0 };
     static int hourMod { 24 };    
@@ -35,7 +37,7 @@ void alarmFunc(alarmScreen_struct* info)
 
     static Timer alarmT;
     static Timer snoozeT;
-    static int secondCounter = 0;
+    static int secondCounter { 0 };
     
     snprintf(buffer, BUFFER_SIZE, "Alarm:");
 
@@ -56,7 +58,6 @@ void alarmFunc(alarmScreen_struct* info)
             snoozeT.reset();
 
             buzzer.write(0.0);
-            //printf("Alarm disabled\n");
         }
 
         
@@ -68,14 +69,12 @@ void alarmFunc(alarmScreen_struct* info)
             {
                 ++hourCounter;
                 hour = hourCounter % hourMod;
-                //printf("Hour value is %i\n", hour);
                 *(info->alarmChng) = false;
             }
             if (timePick.read() == 1 && *(info->alarmChng) == true)
             {
                 ++minCounter;
                 min = minCounter % minMod;
-                //printf("Minute value is %i\n", min);
                 *(info->alarmChng) = false; 
             }
             snprintf(buffer2, BUFFER_SIZE, "%02d:%02d", hour, min);
