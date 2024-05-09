@@ -44,6 +44,7 @@ void alarmFunc(alarmScreen_struct* info)
         //ThisThread::sleep_for(500ms);
         printf("Alarm enabled: %i, alarm active: %i, alarm snoozed: %i, alarm muted: %i\n", 
         *(info->alarmEn), *(info->alarmAct), *(info->alarmSn), *(info->alarmMut));
+        
         //State 0A: If the user disables alarm when ringing or snoozed
         if (*(info->alarmAct) == false && *(info->alarmEn) == false &&
             *(info->alarmSn) == false && *(info->alarmMut) == false)
