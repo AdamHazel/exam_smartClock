@@ -14,27 +14,32 @@ using namespace std::chrono;
 
 void alarmFunc(alarmScreen_struct* info)
 {
+    // IO devices
     DigitalIn timePick(PA_0, PullDown);
     PwmOut buzzer(PA_7);
     buzzer.period(1.0 / 2000);
 
+    // Char arrays to place information that will be displayed on screen
     static char buffer[BUFFER_SIZE];
     static char buffer2[BUFFER_SIZE];
 
+    // Constant expressions connected to setting alarm and duration of alarm ring and snooze
     static constexpr int hourInterval { 24 };
     static constexpr int minInterval { 60 };
-
     static constexpr int alarmDurS { 60 * 10 };
     static constexpr int snoozeDurS { 60 * 5 };
 
+    // Variables to allow user to set alarm 
     static int hourCounter { 0 };
     static int hourMod { 24 };    
-    static int hour { 15 };
-    
     static int minCounter { 0 };
     static int minMod { 60 };
+
+    // Variables to hold chosen alarm time
+    static int hour { 15 };
     static int min { 40 };
 
+    // Timers and variables for alarm and snooze
     static Timer alarmT;
     static Timer snoozeT;
     static int secondCounter { 0 };
@@ -43,11 +48,11 @@ void alarmFunc(alarmScreen_struct* info)
 
     while (true)
     {
-        //ThisThread::sleep_for(500ms);
+        
         printf("Alarm enabled: %i, alarm active: %i, alarm snoozed: %i, alarm muted: %i\n", 
         *(info->alarmEn), *(info->alarmAct), *(info->alarmSn), *(info->alarmMut));
         
-        //State 0A: If the user disables alarm when ringing or snoozed
+        //State 0: If the user disables alarm when ringing or snoozed
         if (*(info->alarmAct) == false && *(info->alarmEn) == false &&
             *(info->alarmSn) == false && *(info->alarmMut) == false)
         {
@@ -101,8 +106,9 @@ void alarmFunc(alarmScreen_struct* info)
             char alarmCheck[BUFFER_SIZE];
             time_t seconds = time(NULL);
             strftime(alarmCheck, BUFFER_SIZE, "%H:%M", localtime(&seconds));
-           // printf("\nTime check: %s and alarm time: %s", alarmCheck, info->alarmBuf);
+            // printf("\nTime check: %s and alarm time: %s", alarmCheck, info->alarmBuf);
 
+            // A way of stopping the alarm from ringing when muted but alarm string and current time string is still equal
             if (*(info->alarmMut) == false)
             {
                 if(strcmp(alarmCheck,info->alarmBuf) == 0)

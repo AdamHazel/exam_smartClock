@@ -56,7 +56,7 @@ void enableAlarm_func() {
 // Cannot snooze unless alarm is active
 void snoozeAlarm_func() {
     if (alarmEnabled == true && alarmActive == true && alarmSnoozed == false) {
-        alarmSnoozed = true;
+        alarmSnooaed = true;
         alarmActive = false;
     }
 }
