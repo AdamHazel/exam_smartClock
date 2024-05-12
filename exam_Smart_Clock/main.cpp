@@ -71,7 +71,7 @@ void muteAlarm_func() {
 
 // To increase alarm values
 void setAlarm_func() {
-    if (screenNumber == 1 && alarmChange == false)
+    if (screenNumber == 1 && alarmChange == false && alarmEnabled == false)
     {
         alarmChange = true;
     }

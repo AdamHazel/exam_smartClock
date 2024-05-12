@@ -22,6 +22,7 @@ void screenCheck(bool &screenChn, DFRobot_RGBLCD1602 &a, int &screenN)
 }
 
 /*
+getInformation_Network:
 Function to get JSON data from a server
 Arguments:
     - int for size of HTTPS request
