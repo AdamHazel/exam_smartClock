@@ -33,7 +33,7 @@ InterruptIn BlueButton(BUTTON1, PullNone);
 InterruptIn enableAlarm(PA_3, PullUp);
 InterruptIn snoozeAlarm(PB_4, PullUp);
 InterruptIn muteAlarm(PA_15, PullUp);
-InterruptIn setAlarm(PB_2, PullUp);
+
 
 // Interrupt functions
 void screenChange() {
@@ -119,7 +119,6 @@ int main() {
     alarmThreadInfo->alarmEn = &alarmEnabled;
     alarmThreadInfo->alarmMut = &alarmMuted;
     alarmThreadInfo->alarmSn = &alarmSnoozed;
-    alarmThreadInfo->alarmChng = &alarmChange;
     alarmThreadInfo->alarmBuf = alarmBuffer;
     
 
@@ -130,7 +129,7 @@ int main() {
     enableAlarm.fall(&enableAlarm_func);
     snoozeAlarm.fall(&snoozeAlarm_func);
     muteAlarm.fall(&muteAlarm_func);
-    setAlarm.fall(&setAlarm_func);
+
 
     // Threads
     Thread tempInfo(osPriorityNormal, OS_STACK_SIZE, nullptr, "tempScreen");

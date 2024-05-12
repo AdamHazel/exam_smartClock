@@ -16,7 +16,7 @@ void defaultScreen(defaultScreen_struct* info)
 
         static char buffer[BUFFER_SIZE];
         static char buffer2[BUFFER_SIZE];
-        strftime(buffer, BUFFER_SIZE, "%a %d %b %H:%M", localtime(&seconds));
+        strftime(buffer, BUFFER_SIZE, "%a %d %b %R", localtime(&seconds));
 
         // State 1: When disabled is enabled
         if (*(info->alarmAct) == false && *(info->alarmEn) == false &&

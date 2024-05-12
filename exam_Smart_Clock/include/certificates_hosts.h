@@ -1,6 +1,9 @@
-#ifndef IPGEOLOCATION_H
-#define IPGEOLOCATION_H
+#ifndef CERTIFICATES_HOSTS_H
+#define CERTIFICATES_HOSTS_H
 
+// Start up screen (ipgeolocation)
+const char ipgeolocationHost[] = "api.ipgeolocation.io";
+const char ipgeoResource[] = "/timezone?REDACTED";
 const char ipgeolocationcert[] =
     "-----BEGIN CERTIFICATE-----\n"
     "MIICxjCCAk2gAwIBAgIRALO93/inhFu86QOgQTWzSkUwCgYIKoZIzj0EAwMwTzEL\n"
@@ -19,5 +22,4 @@ const char ipgeolocationcert[] =
     "Dbo/AwCd89eYhNlXLr3pD5xcSAQh8suzYHKOl9YST8pE9kLJ03uGqQIwWrGxtO3q\n"
     "YJkgsTgDyj2gJrjubi1K9sZmHzOa25JK1fUpE8ZwYii6I4zPPS/Lgul/\n"
     "-----END CERTIFICATE-----\n";
-
-#endif // IPGEOLOCATION_H
+#endif // CERTIFICATES_HOSTS_H
