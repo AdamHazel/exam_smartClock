@@ -21,11 +21,23 @@ void screenCheck(bool &screenChn, DFRobot_RGBLCD1602 &a, int &screenN)
     }
 }
 
-char* getInformation_Network(int BUFFER_SIZE_REQUEST,  char* hostChoice, char* certificate, char* resourceWanted)
+/*
+Function to get JSON data from a server
+Arguments:
+    - int for size of HTTPS request
+    - const char* (string) for the host e.g. "api.ipgeolocation.io"
+    - const char* for HTTPS certificate used in the TLSSocket
+    - const char* for requested resource
+    - const char strings can be placed in certificates_hosts.h
+
+Returns: 
+    - returns a pointer to a string of JSON data
+*/ 
+
+char* getInformation_Network(int BUFFER_SIZE_REQUEST, const char* hostChoice, const char* certificate, const char* resourceWanted)
 {
     static constexpr int BUFFER_SIZE_RESPONSE = 4000;
-    static char information[BUFFER_SIZE_RESPONSE];
-
+   
     NetworkInterface *network = nullptr;
 
     do {
@@ -69,7 +81,7 @@ char* getInformation_Network(int BUFFER_SIZE_REQUEST,  char* hostChoice, char* c
 
     static bool completed = false;
 
-    while (completed == false)
+    while (true)
     {
         // Socket used for HTTPS
         TLSSocket *socket = new TLSSocket;
@@ -187,6 +199,8 @@ char* getInformation_Network(int BUFFER_SIZE_REQUEST,  char* hostChoice, char* c
         printf("\nReceived %d bytes with HTTPS status code: %.*s\n", received_bytes,
         strstr(https_response, "\n") - https_response, https_response);
 
+        printf("\n\nWhole response:\n%s",https_response);
+
         printf("Step 10: Getting JSON information\n");
 
         char *json_begin = strchr(https_response, '{');
@@ -197,17 +211,10 @@ char* getInformation_Network(int BUFFER_SIZE_REQUEST,  char* hostChoice, char* c
             printf("Failed to find JSON in response\n");
             continue;
         }
-
-        // End the string after the end of the JSON data
-        json_end[1] = 0;
-        
-        snprintf(information, sizeof(json_begin), "%s", json_begin);
-        printf("\n\nJSON response:\n%s\n", information);
-
-        completed = true;
-
-        delete socket;
-    }
-    
-    return information;
+        else {
+            delete socket;
+            json_end[1] = 0;
+            return json_begin;
+        }        
+    }  
 }

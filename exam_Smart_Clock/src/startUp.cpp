@@ -25,6 +25,9 @@ void startUp(DFRobot_RGBLCD1602 &lcd) {
   char *json_response = getInformation_Network(BUFFER_SIZE, ipgeolocationHost,
                                        ipgeolocationcert, ipgeoResource);
 
+  
+  printf("JSON RESPONSE AGAIN TO CHECK:\n\n%s", json_response);
+  
   // Parse response as JSON, starting from the first {
   json document = json::parse(json_response);
 
@@ -42,15 +45,9 @@ void startUp(DFRobot_RGBLCD1602 &lcd) {
   longit = document["geo"]["longitude"];
   city = document["geo"]["city"];
 
-  /*
-    printf("Time as a basic string %s\n", ctime(&time));
-    printf("Longitude is  %s\n", longit.c_str());
-    printf("Latitude is %s\n", latit.c_str());
-    printf("City is %s\n", city.c_str());
-    */
 
   printf("Start up screens should be showing...\n");
-  printf("Start screen 1\n");
+  
 
   // Start up screen one
   lcd.clear();
@@ -60,7 +57,6 @@ void startUp(DFRobot_RGBLCD1602 &lcd) {
   lcd.printf("%.0f", (float)time);
   ThisThread::sleep_for(2s);
 
-  printf("Start screen 2\n");
   // Start up screen two
   lcd.clear();
   lcd.setCursor(0, 0);
@@ -68,8 +64,7 @@ void startUp(DFRobot_RGBLCD1602 &lcd) {
   lcd.setCursor(0, 1);
   lcd.printf("Lon: %s", longit.c_str());
   ThisThread::sleep_for(2s);
-
-  printf("Start screen 3\n");
+  
   // Start up screen three
   lcd.clear();
   lcd.setCursor(0, 0);

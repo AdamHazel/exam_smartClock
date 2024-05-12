@@ -1,7 +1,7 @@
 #ifndef CERTIFICATES_HOSTS_H
 #define CERTIFICATES_HOSTS_H
 
-// Start up screen
+// Start up screen (ipgeolocation)
 const char ipgeolocationHost[] = "api.ipgeolocation.io";
 const char ipgeoResource[] = "/timezone?REDACTED";
 const char ipgeolocationcert[] =

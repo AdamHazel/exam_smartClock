@@ -20,7 +20,6 @@ typedef struct alarmScreen_struct {
   bool *alarmAct;
   bool *alarmSn;
   bool *alarmMut;
-  bool *alarmChng;
   char *alarmBuf;
 } alarmScreen_struct;
 
