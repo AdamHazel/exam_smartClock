@@ -105,7 +105,7 @@ void alarmFunc(alarmScreen_struct* info)
             // Create string to create recurring alarm
             char alarmCheck[BUFFER_SIZE];
             time_t seconds = time(NULL);
-            strftime(alarmCheck, BUFFER_SIZE, "%H:%M", localtime(&seconds));
+            strftime(alarmCheck, BUFFER_SIZE, "%R", localtime(&seconds));
             // printf("\nTime check: %s and alarm time: %s", alarmCheck, info->alarmBuf);
 
             // A way of stopping the alarm from ringing when muted but alarm string and current time string is still equal
