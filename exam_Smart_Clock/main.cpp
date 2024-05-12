@@ -28,11 +28,13 @@ bool alarmSnoozed = false;
 bool alarmMuted = false;
 char alarmBuffer[17];
 
+
 // Buttons (Port 0 and 1 is used in alarmFunction)
 InterruptIn BlueButton(BUTTON1, PullNone);
 InterruptIn enableAlarm(PA_3, PullUp);
 InterruptIn snoozeAlarm(PB_4, PullUp);
 InterruptIn muteAlarm(PA_15, PullUp);
+InterruptIn setAlarm(PB_2, PullUp);
 
 
 // Interrupt functions
@@ -118,6 +120,7 @@ int main() {
     alarmThreadInfo->alarmAct = &alarmActive;
     alarmThreadInfo->alarmEn = &alarmEnabled;
     alarmThreadInfo->alarmMut = &alarmMuted;
+    alarmThreadInfo->alarmChng = &alarmChange;
     alarmThreadInfo->alarmSn = &alarmSnoozed;
     alarmThreadInfo->alarmBuf = alarmBuffer;
     
@@ -129,6 +132,7 @@ int main() {
     enableAlarm.fall(&enableAlarm_func);
     snoozeAlarm.fall(&snoozeAlarm_func);
     muteAlarm.fall(&muteAlarm_func);
+    setAlarm.fall(&setAlarm_func);
 
 
     // Threads
