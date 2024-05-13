@@ -13,5 +13,6 @@ void tempHum(screen* scr);
 void alarmFunc(alarmScreen_struct* info);
 void defaultScreen(defaultScreen_struct* info);
 void weatherFetch(weatherAuto_struct* info);
+void weatherbyChoice(weatherChoice_struct* info);
 
 #endif // CLOCK_FUNCTIONS_H

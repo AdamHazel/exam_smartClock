@@ -108,7 +108,7 @@ int main() {
     screen *alarmScreen = new screen;
     screen *tempScreen = new screen;
     screen *weathScreen = new screen;
-    screen *coorScreen = new screen;
+    screen *weathChoiceScreen = new screen;
     screen *newsScreen = new screen;
 
     // Initialise struct for default screen thread
@@ -139,6 +139,13 @@ int main() {
     weatherThreadInfo->latit = &latit;
     weatherThreadInfo->longit = &longit;
     weatherThreadInfo->screenChng = &screenChanged;
+
+    // Intialise struct for weather by choice screen thread
+    weatherChoice_struct* choiceThreadInfo = new weatherChoice_struct;
+    choiceThreadInfo->weatherC = weathChoiceScreen;
+    choiceThreadInfo->screenN = &screenNumber;
+    choiceThreadInfo->netMut = &networkMutex;
+    choiceThreadInfo->screenChng = &screenChanged;
     
 
     printf("We got passed assigning to struct\n");
@@ -227,6 +234,21 @@ int main() {
     defaultInfo.join();
     alarmSet.join();
     weatherAuto.join();
+
+    // End of structs
+    delete defThreadInfo;
+    delete alarmThreadInfo;
+    delete weatherThreadInfo;
+    delete choiceThreadInfo;
+
+    // End of screens
+    delete defScreen;
+    delete alarmScreen;
+    delete tempScreen;
+    delete weathScreen;
+    delete weathChoiceScreen;
+    delete newsScreen;
+
 
     return 0;
 }

@@ -24,7 +24,6 @@ void startUp(DFRobot_RGBLCD1602 &lcd, std::string &longit, std::string &latit) {
 
   
   printf("JSON RESPONSE AGAIN TO CHECK:\n\n%s\n\n", json_response);
-  printf("Stopped here before paring JSON\n");
   
   // Parse response as JSON, starting from the first {
   json document = json::parse(json_response);
@@ -34,7 +33,6 @@ void startUp(DFRobot_RGBLCD1602 &lcd, std::string &longit, std::string &latit) {
     return;
   }
 
-    printf("Stopped here after paring JSON\n");
   // Get info from API
   // printf("If you came this far, then yay!\n");
   time = document["date_time_unix"].get<float>() +

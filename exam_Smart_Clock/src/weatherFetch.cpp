@@ -1,4 +1,3 @@
-#include "DFRobot_RGBLCD1602.h"
 #include "classes.h"
 #include "mbed.h"
 #include <cstdio>
@@ -20,9 +19,9 @@ void weatherFetch(weatherAuto_struct* info)
 {
     // Desired resource
     static char resource[100];
-    snprintf(resource, 100, "/v1/current.json?key=e67b72e911fc4802b19175420241205&q=%s,%s&aqi=no", info->latit->c_str(), info->longit->c_str());
     constexpr int BUFFER_SIZE = 200;
-
+    snprintf(resource, 100, "/v1/current.json?key=e67b72e911fc4802b19175420241205&q=%s,%s&aqi=no", info->latit->c_str(), info->longit->c_str());
+    
     // Variabes to help manage how often information is fetched
     static bool completed = false;
     static Timer t;
