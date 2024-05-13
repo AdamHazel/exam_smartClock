@@ -29,7 +29,7 @@ Arguments:
     - const char* (string) for the host e.g. "api.ipgeolocation.io"
     - const char* for HTTPS certificate used in the TLSSocket
     - const char* for requested resource
-    - const char strings can be placed in certificates_hosts.h
+    - Note: const char strings can be placed in certificates_hosts.h, and then include certificates_host in .cpp file
 
 Returns: 
     - returns a pointer to a string of JSON data
@@ -229,6 +229,19 @@ char* getInformation_https(int BUFFER_SIZE_REQUEST, const char* hostChoice, cons
         }        
     }  
 }
+
+/*
+getInformation_http:
+Function to get JSON data from a server
+Arguments:
+    - int for size of HTTPS request
+    - const char* (string) for the host e.g. "api.ipgeolocation.io"
+    - const char* for requested resource
+    - Note: const char strings can be placed in certificates_hosts.h, and then include certificates_host in .cpp file
+
+Returns: 
+    - returns a pointer to a string of JSON data
+*/ 
 
 char* getInformation_http(int BUFFER_SIZE_REQUEST,  const char* hostChoice, char* resourceWanted)
 {
