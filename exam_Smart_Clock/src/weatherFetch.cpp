@@ -35,7 +35,6 @@ void weatherFetch(weatherAuto_struct* info)
     static char weatherText[MESSAGE_BUFFER_S];
     static char temperatureText[MESSAGE_BUFFER_S];
     static char spacing[] = "                "; 
-
     static char firstMessage[] = "Data loading       ";
 
     info->weatherS->messMut.lock();
@@ -45,6 +44,7 @@ void weatherFetch(weatherAuto_struct* info)
 
     while (true)
     {
+        // What should happen when screen is chosen or it is time to get new information
         if ( *(info->screenN) == 3 && completed == false)
         {
             info->netMut->lock();
@@ -74,6 +74,7 @@ void weatherFetch(weatherAuto_struct* info)
             
         }
 
+        // What should happen when information is gotten and the screen is not changed
         if (completed == true)
         {
             t.start();
@@ -87,6 +88,7 @@ void weatherFetch(weatherAuto_struct* info)
             }
         }
 
+        // What should happen when the screen is changed
         if (*(info->screenChng) == true)
         {
             t.stop();
