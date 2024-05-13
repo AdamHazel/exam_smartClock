@@ -8,6 +8,7 @@
 #include <cstring>
 #include <string.h>
 #include <utility>
+#include <string>
 
 #include "classes.h"
 #include "helper_functions.h"
@@ -20,6 +21,7 @@ int buttonClick = 0;
 int screenNumber = 0;
 bool screenChanged = false;
 
+
 // Alarm states and buffer
 bool alarmChange = false;
 bool alarmActive = false;
@@ -27,6 +29,10 @@ bool alarmEnabled = false;
 bool alarmSnoozed = false;
 bool alarmMuted = false;
 char alarmBuffer[17];
+
+// String arrays for weather
+std::string latit;
+std::string longit;
 
 
 // Buttons (Port 0 and 1 is used in alarmFunction)
@@ -94,7 +100,8 @@ int main() {
     
     //Initialise screen
     lcd_initialise(lcd);
-    startUp(lcd);
+
+    startUp(lcd, longit, latit);
 
     // Objects for printing information on screen
     screen *defScreen = new screen;
@@ -113,7 +120,7 @@ int main() {
     defThreadInfo->alarmSn = &alarmSnoozed;
     defThreadInfo->alarmBuf = alarmBuffer;
 
-    // Initialise strunct for alarm screeen thread
+    // Initialise struct for alarm screeen thread
     alarmScreen_struct* alarmThreadInfo = new alarmScreen_struct;
     alarmThreadInfo->alarmS = alarmScreen;
     alarmThreadInfo->screenN = &screenNumber;
@@ -123,6 +130,15 @@ int main() {
     alarmThreadInfo->alarmChng = &alarmChange;
     alarmThreadInfo->alarmSn = &alarmSnoozed;
     alarmThreadInfo->alarmBuf = alarmBuffer;
+
+    // Intialise struct for weather (automatic) screen thread
+    weatherAuto_struct* weatherThreadInfo = new weatherAuto_struct;
+    weatherThreadInfo->weatherS = weathScreen;
+    weatherThreadInfo->screenN = &screenNumber;
+    weatherThreadInfo->netMut = &networkMutex;
+    weatherThreadInfo->latit = &latit;
+    weatherThreadInfo->longit = &longit;
+    weatherThreadInfo->screenChng = &screenChanged;
     
 
     printf("We got passed assigning to struct\n");
@@ -139,6 +155,7 @@ int main() {
     Thread tempInfo(osPriorityNormal, OS_STACK_SIZE, nullptr, "tempScreen");
     Thread defaultInfo(osPriorityNormal, OS_STACK_SIZE, nullptr, "defScreen");
     Thread alarmSet(osPriorityNormal, OS_STACK_SIZE, nullptr, "alarmSetScreen");
+    Thread weatherAuto(osPriorityNormal, OS_STACK_SIZE, nullptr, "weaterScreen");
 
     printf("Initialise threads\n");
 
@@ -146,6 +163,7 @@ int main() {
     tempInfo.start(callback(tempHum, tempScreen));
     defaultInfo.start(callback(defaultScreen, defThreadInfo));
     alarmSet.start(callback(alarmFunc,alarmThreadInfo));
+    weatherAuto.start(callback(weatherFetch,weatherThreadInfo));
 
     printf("Threads started\n");
     
@@ -184,9 +202,13 @@ int main() {
         case 3: // Weather screen
             screenCheck(screenChanged, lcd, screenNumber);
             lcd.setCursor(0, 0);
-            lcd.printf("Weather screen");
+            weathScreen->messMut.lock();
+            lcd.printf(weathScreen->getLine_one());
+            lcd.setCursor(0, 1);
+            lcd.printf(weathScreen->getLine_Two());
+            weathScreen->messMut.unlock();
             break;
-        case 4: // Coordinates screen
+        case 4: // Weather by choice screen
             screenCheck(screenChanged, lcd, screenNumber);
             lcd.setCursor(0, 0);
             lcd.printf("Coor. screen");
@@ -204,6 +226,7 @@ int main() {
     tempInfo.join();
     defaultInfo.join();
     alarmSet.join();
+    weatherAuto.join();
 
     return 0;
 }

@@ -24,4 +24,13 @@ typedef struct alarmScreen_struct {
   char *alarmBuf;
 } alarmScreen_struct;
 
+typedef struct weatherAuto_struct {
+    screen *weatherS;
+    int *screenN;
+    Mutex *netMut;
+    std::string *latit;
+    std::string *longit;
+    bool *screenChng;
+} weatherAuto_struct;
+
 #endif // STRUCTS_H

@@ -11,6 +11,10 @@ void tempHum(screen *scr)
     DevI2C i2c(PB_11, PB_10);
     HTS221Sensor hts221(&i2c);
 
+    static char tempInfo[MESSAGE_BUFFER_S];
+    static char humInfo[MESSAGE_BUFFER_S];
+    static char spacing[MESSAGE_BUFFER_S] = "                "; 
+
     //Start up sensor
     if (hts221.init(NULL) != 0)
         printf("Failed to initialise HTS221 device\n");
@@ -31,10 +35,7 @@ void tempHum(screen *scr)
         hts221.get_humidity(&hum);
         hts221.get_temperature(&temp);
 
-        char tempInfo[MESSAGE_BUFFER_S];
-        char humInfo[MESSAGE_BUFFER_S];
-
-        snprintf(tempInfo, MESSAGE_BUFFER_S, "Temp: %.1f C", temp);
+        snprintf(tempInfo, MESSAGE_BUFFER_S, "Temp: %.1f C%s", temp,spacing);
         snprintf(humInfo, MESSAGE_BUFFER_S, "Humidity: %.0f", hum);
 
         scr->messMut.lock();

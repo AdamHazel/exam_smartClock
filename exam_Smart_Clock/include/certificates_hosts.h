@@ -22,4 +22,8 @@ const char ipgeolocationcert[] =
     "Dbo/AwCd89eYhNlXLr3pD5xcSAQh8suzYHKOl9YST8pE9kLJ03uGqQIwWrGxtO3q\n"
     "YJkgsTgDyj2gJrjubi1K9sZmHzOa25JK1fUpE8ZwYii6I4zPPS/Lgul/\n"
     "-----END CERTIFICATE-----\n";
+
+// Weather screen
+const static char apiweatherhost[] = "api.weatherapi.com";
+
 #endif // CERTIFICATES_HOSTS_H

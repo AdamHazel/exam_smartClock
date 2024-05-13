@@ -9,24 +9,22 @@
 #include "json.hpp"
 
 #define JSON_NOEXCEPTION
-#define WAIT_TIME_MS (10000ms)
-#define HTTP_RESPONSE_BUFFER_SIZE (4000)
+
 
 using json = nlohmann::json;
 
-void startUp(DFRobot_RGBLCD1602 &lcd) {
+void startUp(DFRobot_RGBLCD1602 &lcd, std::string &longit, std::string &latit) {
 
   time_t time;
-  std::string longit;
-  std::string latit;
   std::string city;
 
   constexpr int BUFFER_SIZE = 200;
-  char *json_response = getInformation_Network(BUFFER_SIZE, ipgeolocationHost,
+  char *json_response = getInformation_https(BUFFER_SIZE, ipgeolocationHost,
                                        ipgeolocationcert, ipgeoResource);
 
   
-  printf("JSON RESPONSE AGAIN TO CHECK:\n\n%s", json_response);
+  printf("JSON RESPONSE AGAIN TO CHECK:\n\n%s\n\n", json_response);
+  printf("Stopped here before paring JSON\n");
   
   // Parse response as JSON, starting from the first {
   json document = json::parse(json_response);
@@ -36,6 +34,7 @@ void startUp(DFRobot_RGBLCD1602 &lcd) {
     return;
   }
 
+    printf("Stopped here after paring JSON\n");
   // Get info from API
   // printf("If you came this far, then yay!\n");
   time = document["date_time_unix"].get<float>() +
@@ -48,7 +47,6 @@ void startUp(DFRobot_RGBLCD1602 &lcd) {
 
   printf("Start up screens should be showing...\n");
   
-
   // Start up screen one
   lcd.clear();
   lcd.setCursor(0, 0);
