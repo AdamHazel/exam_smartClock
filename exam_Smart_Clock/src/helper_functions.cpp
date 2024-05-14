@@ -204,7 +204,7 @@ char* getInformation_https(int BUFFER_SIZE_REQUEST, const char* hostChoice, cons
         printf("\nReceived %d bytes with HTTPS status code: %.*s\n", received_bytes,
         strstr(http_response, "\n") - http_response, http_response);
 
-        printf("\n\nWhole response:\n%s",http_response);
+        //printf("\n\nWhole response:\n%s",http_response);
 
         printf("Step 10: Getting JSON information\n");
 
@@ -402,7 +402,7 @@ char* getInformation_http(int BUFFER_SIZE_REQUEST,  const char* hostChoice, char
         printf("\nReceived %d bytes with HTTP status code: %.*s\n", received_bytes,
         strstr(http_response, "\n") - http_response, http_response);
 
-        printf("\n\nWhole response:\n%s",http_response);
+        //printf("\n\nWhole response:\n%s",http_response);
 
         printf("Step 10: Getting JSON information\n");
 

@@ -34,7 +34,6 @@ char alarmBuffer[17];
 std::string latit;
 std::string longit;
 
-
 // Buttons (Port 0 and 1 is used in alarmFunction)
 InterruptIn BlueButton(BUTTON1, PullNone);
 InterruptIn enableAlarm(PA_3, PullUp);
@@ -138,14 +137,12 @@ int main() {
     weatherThreadInfo->netMut = &networkMutex;
     weatherThreadInfo->latit = &latit;
     weatherThreadInfo->longit = &longit;
-    weatherThreadInfo->screenChng = &screenChanged;
 
     // Intialise struct for weather by choice screen thread
     weatherChoice_struct* choiceThreadInfo = new weatherChoice_struct;
     choiceThreadInfo->weatherC = weathChoiceScreen;
     choiceThreadInfo->screenN = &screenNumber;
     choiceThreadInfo->netMut = &networkMutex;
-    choiceThreadInfo->screenChng = &screenChanged;
     
 
     printf("We got passed assigning to struct\n");
@@ -157,20 +154,19 @@ int main() {
     muteAlarm.fall(&muteAlarm_func);
     setAlarm.fall(&setAlarm_func);
 
-
     // Threads
     Thread tempInfo(osPriorityNormal, OS_STACK_SIZE, nullptr, "tempScreen");
     Thread defaultInfo(osPriorityNormal, OS_STACK_SIZE, nullptr, "defScreen");
     Thread alarmSet(osPriorityNormal, OS_STACK_SIZE, nullptr, "alarmSetScreen");
-    Thread weatherAuto(osPriorityNormal, OS_STACK_SIZE, nullptr, "weaterScreen");
-
-    printf("Initialise threads\n");
+    Thread weatherAuto(osPriorityNormal, OS_STACK_SIZE, nullptr, "weatherScreen");
+    Thread weatherChoice(osPriorityNormal, OS_STACK_SIZE, nullptr, "weatherChoiceScreen");
 
     // Start thread
     tempInfo.start(callback(tempHum, tempScreen));
     defaultInfo.start(callback(defaultScreen, defThreadInfo));
     alarmSet.start(callback(alarmFunc,alarmThreadInfo));
     weatherAuto.start(callback(weatherFetch,weatherThreadInfo));
+    weatherChoice.start(callback(weatherbyChoice,choiceThreadInfo));
 
     printf("Threads started\n");
     
@@ -218,7 +214,11 @@ int main() {
         case 4: // Weather by choice screen
             screenCheck(screenChanged, lcd, screenNumber);
             lcd.setCursor(0, 0);
-            lcd.printf("Coor. screen");
+            weathChoiceScreen->messMut.lock();
+            lcd.printf(weathChoiceScreen->getLine_one());
+            lcd.setCursor(0, 1);
+            lcd.printf(weathChoiceScreen->getLine_Two());
+            weathChoiceScreen->messMut.unlock();
             break;
         case 5: // News screen
             screenCheck(screenChanged, lcd, screenNumber);
@@ -234,6 +234,7 @@ int main() {
     defaultInfo.join();
     alarmSet.join();
     weatherAuto.join();
+    weatherChoice.join();
 
     // End of structs
     delete defThreadInfo;

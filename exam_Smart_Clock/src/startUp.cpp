@@ -23,8 +23,6 @@ void startUp(DFRobot_RGBLCD1602 &lcd, std::string &longit, std::string &latit) {
                                        ipgeolocationcert, ipgeoResource);
 
   
-  printf("JSON RESPONSE AGAIN TO CHECK:\n\n%s\n\n", json_response);
-  
   // Parse response as JSON, starting from the first {
   json document = json::parse(json_response);
 

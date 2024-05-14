@@ -10,6 +10,8 @@
 #include "helper_functions.h"
 #include "json.hpp"
 
+#define RESOURCE_S 100
+#define JSON_NOEXCEPTION
 #define MESSAGE_BUFFER_S 17
 
 using json = nlohmann::json;
@@ -18,9 +20,9 @@ using namespace std::chrono;
 void weatherFetch(weatherAuto_struct* info)
 {
     // Desired resource
-    static char resource[100];
+    static char resource[RESOURCE_S];
     constexpr int BUFFER_SIZE = 200;
-    snprintf(resource, 100, "/v1/current.json?key=e67b72e911fc4802b19175420241205&q=%s,%s&aqi=no", info->latit->c_str(), info->longit->c_str());
+    snprintf(resource, RESOURCE_S, "/v1/current.json?key=e67b72e911fc4802b19175420241205&q=%s,%s&aqi=no", info->latit->c_str(), info->longit->c_str());
     
     // Variabes to help manage how often information is fetched
     static bool completed = false;
@@ -58,19 +60,25 @@ void weatherFetch(weatherAuto_struct* info)
                 continue;
             }
 
-            temperature = document["current"]["temp_c"].get<int>();
-            summary = document["current"]["condition"]["text"];
+            if (document["current"]["temp_c"].is_number_float() && document["current"]["condition"]["text"].is_string())
+            {
+                
+                summary = document["current"]["condition"]["text"];
+                temperature = document["current"]["temp_c"].get<int>();
 
-            snprintf(weatherText, MESSAGE_BUFFER_S, "%s%s", summary.c_str(), spacing);
-            snprintf(temperatureText, MESSAGE_BUFFER_S, "%i degrees%s", temperature, spacing);
+                snprintf(weatherText, MESSAGE_BUFFER_S, "%s%s", summary.c_str(), spacing);
+                snprintf(temperatureText, MESSAGE_BUFFER_S, "%i degrees%s", temperature, spacing);
+            } else {
+                snprintf(weatherText, MESSAGE_BUFFER_S, "Error%s", spacing);
+                snprintf(temperatureText, MESSAGE_BUFFER_S, "No info. found%s", spacing);
+            }
 
             info->weatherS->messMut.lock();
             info->weatherS->setLine_one(weatherText);
             info->weatherS->setLine_two(temperatureText);
             info->weatherS->messMut.unlock();
             
-            completed = true;
-            
+            completed = true;   
         }
 
         // What should happen when information is gotten and the screen is not changed
@@ -88,7 +96,7 @@ void weatherFetch(weatherAuto_struct* info)
         }
 
         // What should happen when the screen is changed
-        if (*(info->screenChng) == true)
+        if (*(info->screenN) != 3)
         {
             t.stop();
             t.reset();

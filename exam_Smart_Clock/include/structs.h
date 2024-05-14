@@ -30,14 +30,12 @@ typedef struct weatherAuto_struct {
     Mutex *netMut;
     std::string *latit;
     std::string *longit;
-    bool *screenChng;
 } weatherAuto_struct;
 
 typedef struct weatherChoice_struct {
     screen *weatherC;
     int *screenN;
     Mutex *netMut;
-    bool *screenChng;
 } weatherChoice_struct;
 
 #endif // STRUCTS_H
