@@ -1,9 +1,15 @@
+/**
+ * @file certificates_hosts.h
+ * @author Tina, Ørjan, Lasse og Adam
+ */
+
 #ifndef CERTIFICATES_HOSTS_H
 #define CERTIFICATES_HOSTS_H
 
-// Start up screen (ipgeolocation)
+// Variables used for start up screen (ipgeolocation)
 const char ipgeolocationHost[] = "api.ipgeolocation.io";
-const char ipgeoResource[] = "/timezone?REDACTED";
+const char ipgeoResource[] =
+    "/timezone?REDACTED";
 const char ipgeolocationcert[] =
     "-----BEGIN CERTIFICATE-----\n"
     "MIICxjCCAk2gAwIBAgIRALO93/inhFu86QOgQTWzSkUwCgYIKoZIzj0EAwMwTzEL\n"
@@ -23,7 +29,7 @@ const char ipgeolocationcert[] =
     "YJkgsTgDyj2gJrjubi1K9sZmHzOa25JK1fUpE8ZwYii6I4zPPS/Lgul/\n"
     "-----END CERTIFICATE-----\n";
 
-// Weather screen
+// Variables used for weather screens
 const static char apiweatherhost[] = "api.weatherapi.com";
 
 #endif // CERTIFICATES_HOSTS_H

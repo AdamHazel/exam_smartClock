@@ -1,3 +1,8 @@
+/**
+ * @file structs.h
+ * @author Tina, Ørjan, Lasse og Adam
+ */
+
 #ifndef STRUCTS_H
 #define STRUCTS_H
 
@@ -25,17 +30,17 @@ typedef struct alarmScreen_struct {
 } alarmScreen_struct;
 
 typedef struct weatherAuto_struct {
-    screen *weatherS;
-    int *screenN;
-    Mutex *netMut;
-    std::string *latit;
-    std::string *longit;
+  screen *weatherS;
+  int *screenN;
+  Mutex *netMut;
+  std::string *latit;
+  std::string *longit;
 } weatherAuto_struct;
 
 typedef struct weatherChoice_struct {
-    screen *weatherC;
-    int *screenN;
-    Mutex *netMut;
+  screen *weatherC;
+  int *screenN;
+  Mutex *netMut;
 } weatherChoice_struct;
 
 #endif // STRUCTS_H

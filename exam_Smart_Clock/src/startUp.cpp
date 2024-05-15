@@ -1,3 +1,8 @@
+/**
+ * @file startUp.cpp
+ * @author Tina, Ørjan, Lasse og Adam
+ */
+
 #include "DFRobot_RGBLCD1602.h"
 #include "classes.h"
 #include "mbed.h"
@@ -10,9 +15,13 @@
 
 #define JSON_NOEXCEPTION
 
-
 using json = nlohmann::json;
 
+/**
+ * @brief Initialises LCD screen
+ * @param References to LCD object DFRobot_RGBLCD1602, string where longitude is
+ * saved, and string where latitude is saved
+ */
 void startUp(DFRobot_RGBLCD1602 &lcd, std::string &longit, std::string &latit) {
 
   time_t time;
@@ -20,9 +29,8 @@ void startUp(DFRobot_RGBLCD1602 &lcd, std::string &longit, std::string &latit) {
 
   constexpr int BUFFER_SIZE = 200;
   char *json_response = getInformation_https(BUFFER_SIZE, ipgeolocationHost,
-                                       ipgeolocationcert, ipgeoResource);
+                                             ipgeolocationcert, ipgeoResource);
 
-  
   // Parse response as JSON, starting from the first {
   json document = json::parse(json_response);
 
@@ -31,8 +39,7 @@ void startUp(DFRobot_RGBLCD1602 &lcd, std::string &longit, std::string &latit) {
     return;
   }
 
-  // Get info from API
-  // printf("If you came this far, then yay!\n");
+  // Get info from parsed JSON and set RTC
   time = document["date_time_unix"].get<float>() +
          (document["timezone_offset_with_dst"].get<float>() * 3600);
   set_time(time);
@@ -40,9 +47,6 @@ void startUp(DFRobot_RGBLCD1602 &lcd, std::string &longit, std::string &latit) {
   longit = document["geo"]["longitude"];
   city = document["geo"]["city"];
 
-
-  printf("Start up screens should be showing...\n");
-  
   // Start up screen one
   lcd.clear();
   lcd.setCursor(0, 0);
@@ -58,7 +62,7 @@ void startUp(DFRobot_RGBLCD1602 &lcd, std::string &longit, std::string &latit) {
   lcd.setCursor(0, 1);
   lcd.printf("Lon: %s", longit.c_str());
   ThisThread::sleep_for(2s);
-  
+
   // Start up screen three
   lcd.clear();
   lcd.setCursor(0, 0);
