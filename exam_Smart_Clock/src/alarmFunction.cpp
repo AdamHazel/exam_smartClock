@@ -12,7 +12,6 @@
 #include <cstring>
 #include <utility>
 
-
 #define BUFFER_SIZE 17
 
 using namespace std::chrono;

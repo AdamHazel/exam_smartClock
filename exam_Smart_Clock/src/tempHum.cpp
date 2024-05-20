@@ -28,13 +28,9 @@ void tempHum(screen *scr) {
   // Start up sensor
   if (hts221.init(NULL) != 0)
     printf("Failed to initialise HTS221 device\n");
-  else
-    printf("HTS221 device initialised\n");
 
   if (hts221.enable() != 0)
     printf("Failed to power up HTS221 device\n");
-  else
-    printf("HTS221 device powered up!");
 
   // Variables to record values
   float hum;

@@ -8,8 +8,8 @@
             "platform.minimal-printf-set-floating-point-max-decimals": 6,
             "platform.minimal-printf-enable-64-bit": false,
             "nsapi.default-wifi-security": "WPA_WPA2",
-            "nsapi.default-wifi-ssid": "\"student-FoU\"",
-            "nsapi.default-wifi-password": "\"stud2018\"",
+            "nsapi.default-wifi-ssid": "\"AirTies_Air4920_K9F9\"",
+            "nsapi.default-wifi-password": "\"wmnwmf7793\"",
             "rtos.main-thread-stack-size": 8192
         },
         "DISCO_L475VG_IOT01A": {

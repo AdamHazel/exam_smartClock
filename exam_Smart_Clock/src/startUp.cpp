@@ -40,19 +40,27 @@ void startUp(DFRobot_RGBLCD1602 &lcd, std::string &longit, std::string &latit) {
   }
 
   // Get info from parsed JSON and set RTC
-  time = document["date_time_unix"].get<float>() +
-         (document["timezone_offset_with_dst"].get<float>() * 3600);
-  set_time(time);
-  latit = document["geo"]["latitude"];
-  longit = document["geo"]["longitude"];
-  city = document["geo"]["city"];
+
+  if (document["date_time_unix"].is_number_float()) {
+    time = document["date_time_unix"].get<float>() +
+           (document["timezone_offset_with_dst"].get<float>() * 3600);
+    set_time(time);
+  }
+
+  if (document["geo"]["latitude"].is_string() &&
+      document["geo"]["longitude"].is_string() &&
+      document["geo"]["city"].is_string()) {
+    latit = document["geo"]["latitude"];
+    longit = document["geo"]["longitude"];
+    city = document["geo"]["city"];
+  }
 
   // Start up screen one
   lcd.clear();
   lcd.setCursor(0, 0);
   lcd.printf("Unix epoch time:");
   lcd.setCursor(0, 1);
-  lcd.printf("%.0f", (float)time);
+  lcd.printf("%i", (int)time);
   ThisThread::sleep_for(2s);
 
   // Start up screen two

@@ -7,7 +7,6 @@
 #include "mbed.h"
 #include <cstdio>
 
-
 #include "structs.h"
 
 #define BUFFER_SIZE 17

@@ -9,12 +9,10 @@
 #include <cstdio>
 #include <string>
 
-
 #include "certificates_hosts.h"
 #include "helper_functions.h"
 #include "json.hpp"
 #include "structs.h"
-
 
 #define RESOURCE_S 100
 #define JSON_NOEXCEPTION

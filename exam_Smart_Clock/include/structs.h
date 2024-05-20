@@ -43,4 +43,12 @@ typedef struct weatherChoice_struct {
   Mutex *netMut;
 } weatherChoice_struct;
 
+typedef struct newsFetch_struct {
+  screen *newsS;
+  int *screenN;
+  Mutex *netMut;
+  bool *ready;
+  bool *loading;
+} newsFetch_struct;
+
 #endif // STRUCTS_H

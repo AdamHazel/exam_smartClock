@@ -32,4 +32,8 @@ const char ipgeolocationcert[] =
 // Variables used for weather screens
 const static char apiweatherhost[] = "api.weatherapi.com";
 
+// Variables used for news screens
+const char newshost[] = "rss.cnn.com";
+const char newsResource[] = "/rss/edition.rss";
+
 #endif // CERTIFICATES_HOSTS_H

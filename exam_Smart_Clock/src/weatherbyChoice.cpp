@@ -9,12 +9,10 @@
 #include <cstdio>
 #include <string>
 
-
 #include "certificates_hosts.h"
 #include "helper_functions.h"
 #include "json.hpp"
 #include "structs.h"
-
 
 #define RESOURCE_S 200
 #define PLACE_S 100
@@ -50,17 +48,18 @@ void weatherbyChoice(weatherChoice_struct *info) {
   static int temperature;
   static char weatherText[MESSAGE_BUFFER_S];
   static char temperatureText[MESSAGE_BUFFER_S];
+  static char startMessage[] = "Enter place:     ";
   static char spacing[] = "                ";
 
-  // Initial message on screen before data is fetched
-  info->weatherC->messMut.lock();
-  info->weatherC->setLine_one(spacing);
-  info->weatherC->setLine_two(spacing);
-  info->weatherC->messMut.unlock();
-
   while (true) {
-    // Weather is fetched on demand
-    if (placeGotten == false && *(info)->screenN == 4) {
+
+    // Starting message
+    if (placeGotten == false && *(info->screenN) == 4) {
+      info->weatherC->messMut.lock();
+      info->weatherC->setLine_one(startMessage);
+      info->weatherC->setLine_two(spacing);
+      info->weatherC->messMut.unlock();
+
       memset(place, 0, PLACE_S);
       char oneLetter = '\0';
 
@@ -69,12 +68,17 @@ void weatherbyChoice(weatherChoice_struct *info) {
         input.read(&oneLetter, sizeof(oneLetter));
         if (oneLetter == '\r' || oneLetter == '\n') {
           place[i] = '\0';
+          placeGotten = true;
           break;
         } else {
           place[i] = oneLetter;
         }
+
+        if (*(info->screenN) != 4) {
+          memset(place, 0, PLACE_S);
+          break;
+        }
       }
-      placeGotten = true;
     }
 
     if (placeGotten == true && completed == false) {

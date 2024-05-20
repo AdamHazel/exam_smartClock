@@ -12,12 +12,10 @@
 #include <string>
 #include <utility>
 
-
 #include "classes.h"
 #include "clock_functions.h"
 #include "helper_functions.h"
 #include "structs.h"
-
 
 /**
  * @brief Global variables used for changing the screen on clock
@@ -37,6 +35,12 @@ bool alarmEnabled = false;
 bool alarmSnoozed = false;
 bool alarmMuted = false;
 char alarmBuffer[17];
+
+/**
+ * @brief Global variables used for news screen
+ */
+bool newsloading = true;
+bool readytoSend = false;
 
 /**
  * @brief Global variables used for accessing weather data
@@ -126,7 +130,7 @@ void setAlarm_func() {
 int main() {
 
   serial_port.set_baud(115200);
-  
+
   /**
    * @brief Starts up LCD screen
    * @see src/helper_functions.cpp
@@ -186,6 +190,13 @@ int main() {
   choiceThreadInfo->screenN = &screenNumber;
   choiceThreadInfo->netMut = &networkMutex;
 
+  newsFetch_struct *newsScreenInfo = new newsFetch_struct;
+  newsScreenInfo->newsS = newsScreen;
+  newsScreenInfo->screenN = &screenNumber;
+  newsScreenInfo->netMut = &networkMutex;
+  newsScreenInfo->ready = &readytoSend;
+  newsScreenInfo->loading = &newsloading;
+
   // Attaching functions to interrupts
   BlueButton.rise(&screenChange);
   enableAlarm.fall(&enableAlarm_func);
@@ -200,11 +211,14 @@ int main() {
   Thread weatherAuto(osPriorityNormal, OS_STACK_SIZE, nullptr, "weatherScreen");
   Thread weatherChoice(osPriorityNormal, OS_STACK_SIZE, nullptr,
                        "weatherChoiceScreen");
+  Thread newsFetching(osPriorityNormal, OS_STACK_SIZE, nullptr, "newsScreen");
+
   tempInfo.start(callback(tempHum, tempScreen));
   defaultInfo.start(callback(defaultScreen, defThreadInfo));
   alarmSet.start(callback(alarmFunc, alarmThreadInfo));
   weatherAuto.start(callback(weatherFetch, weatherThreadInfo));
   weatherChoice.start(callback(weatherbyChoice, choiceThreadInfo));
+  newsFetching.start(callback(newsFetch, newsScreenInfo));
 
   /**
    * @brief Prints corresponding information on chosen screen
@@ -259,8 +273,23 @@ int main() {
       break;
     case 5: // News screen
       screenCheck(screenChanged, lcd, screenNumber);
-      lcd.setCursor(0, 0);
-      lcd.printf("News screen");
+      if (newsloading == true) {
+        lcd.setCursor(0, 0);
+        newsScreen->messMut.lock();
+        lcd.printf(newsScreen->getLine_one());
+        lcd.setCursor(0, 1);
+        lcd.printf(newsScreen->getLine_Two());
+        newsScreen->messMut.unlock();
+      }
+      if (readytoSend == true) {
+        lcd.setCursor(0, 0);
+        newsScreen->messMut.lock();
+        lcd.printf(newsScreen->getLine_one());
+        lcd.setCursor(0, 1);
+        lcd.printf(newsScreen->getLine_Two());
+        newsScreen->messMut.unlock();
+        readytoSend = false;
+      }
       break;
     }
   }
@@ -271,12 +300,14 @@ int main() {
   alarmSet.join();
   weatherAuto.join();
   weatherChoice.join();
+  newsFetching.join();
 
   // End of structs
   delete defThreadInfo;
   delete alarmThreadInfo;
   delete weatherThreadInfo;
   delete choiceThreadInfo;
+  delete newsScreenInfo;
 
   // End of screens
   delete defScreen;
