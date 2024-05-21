@@ -34,6 +34,6 @@ const static char apiweatherhost[] = "api.weatherapi.com";
 
 // Variables used for news screens
 const char newshost[] = "rss.cnn.com";
-const char newsResource[] = "/rss/edition.rss";
+const char newsResource[] = "/rss/cnn_latest.rss";
 
 #endif // CERTIFICATES_HOSTS_H

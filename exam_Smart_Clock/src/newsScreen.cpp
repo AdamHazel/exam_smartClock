@@ -63,6 +63,8 @@ void newsFetch(newsFetch_struct *info) {
           getInformation_http_NOTJSON(BUFFER_SIZE, newshost, newsResource);
       info->netMut->unlock();
 
+      printf("\n\n%s\n\n", resultString->c_str());
+
       // Find headlines and title, and place in a new string
       size_t needleS;
       size_t needleE;
