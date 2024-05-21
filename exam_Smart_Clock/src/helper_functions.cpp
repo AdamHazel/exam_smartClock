@@ -429,7 +429,7 @@ char *getInformation_https(int BUFFER_SIZE_REQUEST, const char *hostChoice,
 std::string *getInformation_http_NOTJSON(int BUFFER_SIZE_REQUEST,
                                          const char *hostChoice,
                                          const char *resourceWanted) {
-  static constexpr int BUFFER_SIZE_RESPONSE = 10000;
+  static constexpr int BUFFER_SIZE_RESPONSE = 18000;
 
   NetworkInterface *network = nullptr;
 
