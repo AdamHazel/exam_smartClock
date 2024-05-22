@@ -57,7 +57,7 @@ void alarmFunc(alarmScreen_struct *info) {
   snprintf(buffer, BUFFER_SIZE, "Alarm:");
 
   while (true) {
-    // State 0: If the user disables alarm when ringing or snoozed
+    // State 0
     if (*(info->alarmAct) == false && *(info->alarmEn) == false &&
         *(info->alarmSn) == false && *(info->alarmMut) == false) {
       alarmT.stop();
